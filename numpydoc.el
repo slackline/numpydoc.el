@@ -140,6 +140,13 @@ paragraph-filled."
   :group 'numpydoc
   :type 'boolean)
 
+(defcustom numpydoc-newline-after-opening-quotes t
+  "Flag to control insertion of newline after the opening quotes.
+If set to t a newline will be inserted after the opening quotes of
+the docstring to comply with numpydoc validation rule GL01."
+  :group 'numpydoc
+  :type 'boolean)
+
 ;;; package implementation code.
 
 (cl-defstruct numpydoc--def
@@ -385,10 +392,12 @@ This function assumes the cursor to be in the function body."
     (insert "\n")
     (numpydoc--insert indent
                       (concat (make-string 3 numpydoc-quote-char)
+                              (if numpydoc-newline-after-opening-quotes
+                                "\n    ")
                               (if (numpydoc--prompt-p)
                                   (read-string
                                    (format "Short description: "))
-                                tmps)
+                                   tmps)
                               "\n\n")
                       (make-string 3 numpydoc-quote-char))
     (forward-line -1)
